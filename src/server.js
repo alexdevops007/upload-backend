@@ -35,6 +35,11 @@ const upload = multer({
   limits: { fileSize: 8 * 1024 * 1024 }, // 8 Mo
 });
 
+// Accueil
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Bienvenue sur l'api Upload" });
+});
+
 // Route pour uploader un fichier
 app.post("/upload", upload.single("file"), (req, res) => {
   if (!req.file) {
