@@ -5,9 +5,25 @@ const Grid = require("gridfs-stream");
 const cors = require("cors");
 const path = require("path");
 const colors = require("colors")
+const morgan = require("morgan"); 
 
 const app = express();
-app.use(cors());
+// Configuration de Morgan pour la journalisation en mode 'dev'
+app.use(morgan('dev'));
+
+// Configuration des options CORS
+const corsOptions = {
+  origin: [
+    "http://localhost:8080",
+    "https://e-permis-rdc-frontend.vercel.app"
+  ],
+  optionsSuccessStatus: 200, // Pour certaines anciennes implémentations de navigateurs
+  methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
+};
+
+// Utilisation de CORS avec les options spécifiées
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connexion à MongoDB
@@ -84,6 +100,14 @@ app.get("/files/:filename", (req, res) => {
     res.set("Content-Type", file.contentType);
     return readstream.pipe(res);
   });
+});
+
+// Après les routes
+app.use((err, req, res, next) => {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({ message: 'La taille du fichier dépasse 8 Mo.' });
+  }
+  next(err);
 });
 
 // Démarrer le serveur
