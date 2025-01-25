@@ -13,10 +13,7 @@ app.use(morgan('dev'));
 
 // Configuration des options CORS
 const corsOptions = {
-  origin: [
-    "http://localhost:8080",
-    "https://e-permis-rdc-frontend.vercel.app"
-  ],
+  origin: ["http://localhost:8081", "https://upload-frontend-teal.vercel.app"],
   optionsSuccessStatus: 200, // Pour certaines anciennes implémentations de navigateurs
   methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
   allowedHeaders: "Content-Type,Authorization",
